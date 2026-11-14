@@ -6,6 +6,13 @@
 <title>Italia Lume</title>
 <meta name="description" content="Italia, Sydney. Eight courses from eight regions of Italy, served by candlelight.">
 <meta name="robots" content="noindex, follow">
+<meta name="theme-color" content="#2a0e14">
+<script>
+  /* Motion states only apply once scripting is confirmed; if main.js never runs, show everything. */
+  document.documentElement.classList.add("js");
+  setTimeout(function () { if (!window.__italia) document.documentElement.classList.remove("js"); }, 3000);
+</script>
+<link rel="preload" as="image" href="images/tavola.jpg" imagesrcset="images/tavola-960.jpg 960w, images/tavola.jpg 1672w" imagesizes="(max-width: 1024px) 180vw, 100vw" fetchpriority="high">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -18,54 +25,84 @@
     <a href="#cantina">Wine</a>
     <a href="#sala">The room</a>
   </nav>
-  <a class="btn btn-line" href="#visit">Visit us</a>
+  <a class="btn btn-line" href="https://www.johncrm.com/">Visit us</a>
+  <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
+    <span></span><span></span>
+  </button>
 </header>
+
+<div class="sheet" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Menu">
+  <nav class="sheet-nav" aria-label="Mobile">
+    <a href="#viaggio" style="--i:0">Menu</a>
+    <a href="#cantina" style="--i:1">Wine</a>
+    <a href="#sala" style="--i:2">The room</a>
+    <a href="https://www.johncrm.com/" style="--i:3">Visit us</a>
+  </nav>
+  <p class="sheet-foot"><a href="tel:+85224852033">(852) 2485 2033</a><br><a href="mailto:info@hkboss.com.hk">info@hkboss.com.hk</a></p>
+</div>
 
 <main id="main">
   <section class="hero" id="top" aria-labelledby="hero-title">
-    <div class="hero-bg" aria-hidden="true">
-      <div class="layer dim"></div>
-      <div class="layer lit"></div>
+    <div class="hero-media">
+      <div class="hero-frame">
+        <div class="hero-zoom">
+          <img class="hero-img" src="images/tavola.jpg" srcset="images/tavola-960.jpg 960w, images/tavola.jpg 1672w" sizes="(max-width: 1024px) 180vw, 100vw" width="1672" height="941" fetchpriority="high" decoding="async" alt="A candlelit table at Italia: ravioli with crisp sage and shaved parmesan beside a glass of red wine">
+          <span class="flame" aria-hidden="true"></span>
+        </div>
+      </div>
     </div>
-    <figure class="hero-plate">
-      <img src="images/carne-cruda.webp" width="1000" height="1000" alt="Hand-cut raw beef with shavings of white truffle around a cured egg yolk, on a white plate">
-    </figure>
     <div class="shade" aria-hidden="true"></div>
 
     <div class="hero-copy">
-      <h1 id="hero-title">Italia</h1>
+      <h1 id="hero-title" data-split="chars">Italia</h1>
       <p class="lede">Eight courses from eight regions of Italy, served by candlelight in a lane off Bridge Street.</p>
       <div class="actions">
-        <a class="btn btn-solid" href="#visit">Visit us</a>
+        <a class="btn btn-solid" href="https://www.johncrm.com/">Visit us</a>
         <a class="text-link" href="#viaggio">Read tonight's menu</a>
       </div>
     </div>
     <p class="hero-note">White truffle from Alba is shaved at the table until the end of December.</p>
+    <span class="scroll-cue" aria-hidden="true"><span></span></span>
   </section>
+
+  <div class="ribbon" aria-hidden="true">
+    <div class="ribbon-track">
+      <span>Liguria</span><span>Piemonte</span><span>Lombardia</span><span>Emilia-Romagna</span><span>Lazio</span><span>Toscana</span><span>Campania</span><span>Sicilia</span>
+      <span>Liguria</span><span>Piemonte</span><span>Lombardia</span><span>Emilia-Romagna</span><span>Lazio</span><span>Toscana</span><span>Campania</span><span>Sicilia</span>
+    </div>
+  </div>
 
   <section class="sala" id="sala" aria-labelledby="sala-title">
     <div class="sala-text">
-      <h2 id="sala-title">A small room, lit for eating</h2>
-      <p>Italia seats thirty-two at walnut tables under a low brick vault. There are no screens and nothing louder than conversation. The candles are beeswax, poured for us in the Blue Mountains, and each one burns for exactly one dinner.</p>
-      <p>Head chef Lucia Marchetti grew up above her grandmother's trattoria in Modena. The menu is her map of the country: every course comes from a different region, cooked with Australian produce and the few things we still bring from Italy.</p>
+      <h2 id="sala-title" data-split="words" data-reveal="words">A small room, lit for eating</h2>
+      <p data-reveal="up">Italia seats thirty-two at walnut tables under a low brick vault. There are no screens and nothing louder than conversation. The candles are beeswax, poured for us in the Blue Mountains, and each one burns for exactly one dinner.</p>
+      <p data-reveal="up">Head chef Lucia Marchetti grew up above her grandmother's trattoria in Modena. The menu is her map of the country: every course comes from a different region, cooked with Australian produce and the few things we still bring from Italy.</p>
+      <dl class="facts">
+        <div data-reveal="row"><dt>Seats</dt><dd>32, with a private room for 12</dd></div>
+        <div data-reveal="row"><dt>Dinner</dt><dd>Wednesday to Saturday, from 6pm</dd></div>
+        <div data-reveal="row"><dt>Lunch</dt><dd>Friday and Saturday, from 12pm</dd></div>
+        <div data-reveal="row"><dt>Cellar</dt><dd>1,400 bottles from all 20 regions</dd></div>
+      </dl>
     </div>
-    <dl class="facts">
-      <div><dt>Seats</dt><dd>32, with a private room for 12</dd></div>
-      <div><dt>Dinner</dt><dd>Wednesday to Saturday, from 6pm</dd></div>
-      <div><dt>Lunch</dt><dd>Friday and Saturday, from 12pm</dd></div>
-      <div><dt>Cellar</dt><dd>1,400 bottles from all 20 regions</dd></div>
-    </dl>
+    <div class="sala-media">
+      <figure class="frame frame-a" data-reveal="wipe">
+        <img src="images/mani.jpg" data-parallax="0.09" width="1280" height="853" loading="lazy" decoding="async" alt="Floured hands sealing ravioli by hand on a wooden bench">
+      </figure>
+      <figure class="frame frame-b" data-reveal="wipe" data-parallax="-0.07">
+        <img src="images/tagliolini.jpg" width="900" height="1125" loading="lazy" decoding="async" alt="Tagliolini with shaved black truffle in a handmade bowl">
+      </figure>
+    </div>
   </section>
 
   <section class="menu" id="viaggio" aria-labelledby="menu-title">
     <header class="menu-head">
-      <h2 id="menu-title">Il Viaggio</h2>
-      <p>The tasting menu travels from the Ligurian coast to Palermo in eight courses. $245 per guest. Wine pairing $165, or $290 for the Riserva pairing.</p>
+      <h2 id="menu-title" data-split="words" data-reveal="words">Il Viaggio</h2>
+      <p data-reveal="up">The tasting menu travels from the Ligurian coast to Palermo in eight courses. $245 per guest. Wine pairing $165, or $290 for the Riserva pairing.</p>
     </header>
 
     <div class="menu-body">
       <ol class="courses">
-        <li class="course" data-img="gamberi.webp">
+        <li class="course" data-img="gamberi.webp" data-reveal="up">
           <span class="n" aria-hidden="true">1</span>
           <div class="course-text">
             <p class="region">Liguria</p>
@@ -75,7 +112,7 @@
           </div>
           <img class="course-img" src="images/gamberi.webp" alt="" loading="lazy" width="1000" height="1000">
         </li>
-        <li class="course" data-img="carne-cruda.webp">
+        <li class="course" data-img="carne-cruda.webp" data-reveal="up">
           <span class="n" aria-hidden="true">2</span>
           <div class="course-text">
             <p class="region">Piemonte</p>
@@ -85,7 +122,7 @@
           </div>
           <img class="course-img" src="images/carne-cruda.webp" alt="" loading="lazy" width="1000" height="1000">
         </li>
-        <li class="course" data-img="risotto.webp">
+        <li class="course" data-img="risotto.webp" data-reveal="up">
           <span class="n" aria-hidden="true">3</span>
           <div class="course-text">
             <p class="region">Lombardia</p>
@@ -95,7 +132,7 @@
           </div>
           <img class="course-img" src="images/risotto.webp" alt="" loading="lazy" width="1000" height="1000">
         </li>
-        <li class="course" data-img="tortellini.webp">
+        <li class="course" data-img="tortellini.webp" data-reveal="up">
           <span class="n" aria-hidden="true">4</span>
           <div class="course-text">
             <p class="region">Emilia-Romagna</p>
@@ -105,7 +142,7 @@
           </div>
           <img class="course-img" src="images/tortellini.webp" alt="" loading="lazy" width="1000" height="1000">
         </li>
-        <li class="course" data-img="carciofo.webp">
+        <li class="course" data-img="carciofo.webp" data-reveal="up">
           <span class="n" aria-hidden="true">5</span>
           <div class="course-text">
             <p class="region">Lazio</p>
@@ -115,7 +152,7 @@
           </div>
           <img class="course-img" src="images/carciofo.webp" alt="" loading="lazy" width="1000" height="1000">
         </li>
-        <li class="course" data-img="piccione.webp">
+        <li class="course" data-img="piccione.webp" data-reveal="up">
           <span class="n" aria-hidden="true">6</span>
           <div class="course-text">
             <p class="region">Toscana</p>
@@ -125,7 +162,7 @@
           </div>
           <img class="course-img" src="images/piccione.webp" alt="" loading="lazy" width="1000" height="1000">
         </li>
-        <li class="course" data-img="limone.webp">
+        <li class="course" data-img="limone.webp" data-reveal="up">
           <span class="n" aria-hidden="true">7</span>
           <div class="course-text">
             <p class="region">Campania</p>
@@ -135,7 +172,7 @@
           </div>
           <img class="course-img" src="images/limone.webp" alt="" loading="lazy" width="1000" height="1000">
         </li>
-        <li class="course" data-img="cannolo.webp">
+        <li class="course" data-img="cannolo.webp" data-reveal="up">
           <span class="n" aria-hidden="true">8</span>
           <div class="course-text">
             <p class="region">Sicilia</p>
@@ -147,55 +184,66 @@
         </li>
       </ol>
 
-      <figure class="menu-plate" aria-hidden="true">
-        <img id="menu-plate-img" src="images/gamberi.webp" alt="" width="1000" height="1000">
-      </figure>
+      <div class="menu-stage" aria-hidden="true">
+        <p class="ghost" id="menu-ghost">Liguria</p>
+        <figure class="menu-plate">
+          <img class="plate is-on" src="images/gamberi.webp" alt="" width="1000" height="1000">
+          <img class="plate" src="images/carne-cruda.webp" alt="" width="1000" height="1000">
+        </figure>
+        <p class="menu-count"><span id="menu-num">01</span><span class="bar"><i></i></span><span>08</span></p>
+      </div>
     </div>
-    <p class="menu-foot">A vegetarian Viaggio is available with 48 hours' notice. Tell us about allergies before your visit and the kitchen will plan around them.</p>
+    <p class="menu-foot" data-reveal="up">A vegetarian Viaggio is available with 48 hours' notice. Tell us about allergies before your visit and the kitchen will plan around them.</p>
   </section>
 
   <section class="cantina" id="cantina" aria-labelledby="cantina-title">
-    <div class="cantina-head">
-      <h2 id="cantina-title">From the cellar</h2>
-      <p>Our sommelier, Tommaso Greco, keeps 1,400 bottles in the old coal cellar below the dining room. Six he would open tonight:</p>
+    <div class="cantina-banner">
+      <div class="cantina-media" data-parallax="0.06">
+        <img src="images/cantina.jpg" width="1536" height="1024" loading="lazy" decoding="async" alt="A glass of red wine, a bottle and a lit candle on a dark table">
+      </div>
+      <div class="cantina-head">
+        <h2 id="cantina-title" data-split="words" data-reveal="words">From the cellar</h2>
+        <p data-reveal="up">Our sommelier, Tommaso Greco, keeps 1,400 bottles in the old coal cellar below the dining room. Six he would open tonight:</p>
+      </div>
     </div>
     <div class="table-wrap">
-      <table class="wines">
+      <table class="wines" data-reveal="table">
         <thead>
           <tr><th scope="col">Wine</th><th scope="col">Region</th><th scope="col" class="num">Vintage</th><th scope="col" class="num">Bottle</th></tr>
         </thead>
         <tbody>
-          <tr><td><span class="w">Franciacorta Satèn</span><span class="p">Ca' del Bosco</span></td><td>Lombardia</td><td class="num">NV</td><td class="num">$180</td></tr>
-          <tr><td><span class="w">Fiano di Avellino</span><span class="p">Ciro Picariello</span></td><td>Campania</td><td class="num">2022</td><td class="num">$120</td></tr>
-          <tr><td><span class="w">Etna Rosso</span><span class="p">Benanti</span></td><td>Sicilia</td><td class="num">2021</td><td class="num">$140</td></tr>
-          <tr><td><span class="w">Barolo</span><span class="p">Bartolo Mascarello</span></td><td>Piemonte</td><td class="num">2019</td><td class="num">$420</td></tr>
-          <tr><td><span class="w">Brunello di Montalcino</span><span class="p">Biondi-Santi</span></td><td>Toscana</td><td class="num">2016</td><td class="num">$690</td></tr>
-          <tr><td><span class="w">Amarone della Valpolicella</span><span class="p">Giuseppe Quintarelli</span></td><td>Veneto</td><td class="num">2015</td><td class="num">$980</td></tr>
+          <tr style="--i:0"><td><span class="w-name">Franciacorta Satèn</span><span class="p">Ca' del Bosco<span class="p-region">, Lombardia</span></span></td><td>Lombardia</td><td class="num">NV</td><td class="num">$180</td></tr>
+          <tr style="--i:1"><td><span class="w-name">Fiano di Avellino</span><span class="p">Ciro Picariello<span class="p-region">, Campania</span></span></td><td>Campania</td><td class="num">2022</td><td class="num">$120</td></tr>
+          <tr style="--i:2"><td><span class="w-name">Etna Rosso</span><span class="p">Benanti<span class="p-region">, Sicilia</span></span></td><td>Sicilia</td><td class="num">2021</td><td class="num">$140</td></tr>
+          <tr style="--i:3"><td><span class="w-name">Barolo</span><span class="p">Bartolo Mascarello<span class="p-region">, Piemonte</span></span></td><td>Piemonte</td><td class="num">2019</td><td class="num">$420</td></tr>
+          <tr style="--i:4"><td><span class="w-name">Brunello di Montalcino</span><span class="p">Biondi-Santi<span class="p-region">, Toscana</span></span></td><td>Toscana</td><td class="num">2016</td><td class="num">$690</td></tr>
+          <tr style="--i:5"><td><span class="w-name">Amarone della Valpolicella</span><span class="p">Giuseppe Quintarelli<span class="p-region">, Veneto</span></span></td><td>Veneto</td><td class="num">2015</td><td class="num">$980</td></tr>
         </tbody>
       </table>
     </div>
   </section>
-
-  <section class="visit-section" id="visit" aria-labelledby="visit-title">
-      <h2 id="visit-title">Visit us</h2>
-      <dl class="visit-details">
-        <div><dt>Address</dt><dd>33 Bridge Lane, Sydney NSW 2000</dd></div>
-        <div><dt>Phone</dt><dd><a href="tel:+61255501946">(02) 5550 1946</a></dd></div>
-        <div><dt>Dinner</dt><dd>Wednesday to Saturday, 6pm until late</dd></div>
-        <div><dt>Lunch</dt><dd>Friday and Saturday, 12pm to 3pm</dd></div>
-      </dl>
-  </section>
 </main>
 
 <footer class="foot">
-  <p class="mark">Italia</p>
-  <div class="foot-cols">
-    <p>33 Bridge Lane<br>Sydney NSW 2000</p>
-    <p>(02) 5550 1946<br>Instagram @italia.sydney</p>
-    <p class="ack">Italia stands on Gadigal land. We pay our respects to Elders past and present.</p>
+  <div class="foot-bg" aria-hidden="true"></div>
+  <div class="foot-grid">
+    <dl class="contact">
+      <div data-reveal="row"><dt>Address</dt><dd>Unit 2, 3/F, Block B, Hoi Luen Industrial Centre<br>55 Hoi Yuen Road, Kwun Tong<br>Kowloon, Hong Kong</dd></div>
+      <div data-reveal="row"><dt>Phone</dt><dd><a href="tel:+85224852033">(852) 2485 2033</a></dd></div>
+      <div data-reveal="row"><dt>Email</dt><dd><a href="mailto:info@hkboss.com.hk">info@hkboss.com.hk</a></dd></div>
+      <div data-reveal="row"><dt>Dinner</dt><dd>Wednesday to Saturday, 6pm until late</dd></div>
+      <div data-reveal="row"><dt>Lunch</dt><dd>Friday and Saturday, 12pm to 3pm</dd></div>
+    </dl>
+    <div class="foot-side" data-reveal="up">
+      <p>Instagram @italia.sydney</p>
+      <p class="ack">Italia stands on Gadigal land. We pay our respects to Elders past and present.</p>
+      <a class="btn btn-solid" href="https://www.johncrm.com/">Visit us</a>
+    </div>
   </div>
+  <p class="foot-mark" aria-hidden="true" data-reveal="rise"><span>Italia</span></p>
 </footer>
 
+<div class="lume" aria-hidden="true"></div>
 
 <script src="js/main.js"></script>
 </body>

@@ -6,10 +6,19 @@ The page retains `noindex, follow` and has no booking form or booking backend.
 
 ## Files
 
-- `index.html`: hero, room, menu, wine list and Visit us section.
-- `css/style.css`: responsive candlelit design and local font declarations.
-- `js/main.js`: scrolling header and menu-image transitions.
-- `images/` and `fonts/`: supplied design assets, served locally.
+- `index.html`: hero, regions ribbon, room, menu, wine list, and a footer
+  holding the address, phone, email and hours.
+- `css/style.css`: responsive candlelit design, local font declarations and
+  all motion (arrival states sit under `html.js` and
+  `prefers-reduced-motion: no-preference`, so the page is fully visible
+  without JavaScript or with reduced motion).
+- `js/main.js`: header and mobile menu, hero intro, scroll reveals, parallax,
+  the menu plate crossfade and the pointer candlelight. No dependencies.
+- `images/` and `fonts/`: design assets, served locally. The photographs
+  (`tavola`, `mani`, `tagliolini`, `cantina`) are JPEGs resized from the
+  supplied PNG originals; the plates are cut-out WebP files.
+
+The "Visit us" buttons link out to https://www.johncrm.com/.
 
 ## Local preview
 
@@ -31,7 +40,7 @@ No custom Actions workflow or DNS change is needed for website updates.
 
 Before publishing, check JavaScript syntax with `node --check js/main.js`,
 verify local assets and anchors, and preview desktop, tablet and mobile layouts.
-Check keyboard navigation, reduced motion and the Visit us links.
+Check keyboard navigation, the mobile menu, reduced motion and the Visit us links.
 
 ## Deferred JohnCRM integration
 
