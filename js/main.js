@@ -115,9 +115,8 @@
   var courses = $$(".course");
   var stage = $(".menu-stage");
   var plates = stage ? $$(".plate", stage) : [];
-  var ghost = $("#menu-ghost");
   var num = $("#menu-num");
-  var current = null, front = 0, token = 0, ghostTimer;
+  var current = null, front = 0, token = 0;
 
   function showPlate(src) {
     if (plates.length < 2) return;
@@ -149,35 +148,42 @@
     if (stage) stage.style.setProperty("--prog", ((idx + 1) / courses.length).toFixed(4));
     if (num) num.textContent = (idx < 9 ? "0" : "") + (idx + 1);
 
-    var region = $(".region", li);
-    if (ghost && region) {
-      clearTimeout(ghostTimer);
-      if (reduce) {
-        ghost.textContent = region.textContent;
-      } else {
-        ghost.classList.add("is-out");
-        ghostTimer = setTimeout(function () {
-          ghost.textContent = region.textContent;
-          ghost.classList.remove("is-out");
-        }, 300);
-      }
-    }
     showPlate("images/" + li.getAttribute("data-img"));
   }
 
   if (courses.length) {
     light(courses[0]);
-    if (hasIO) {
-      var reader = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) { if (e.isIntersecting) light(e.target); });
-      }, { rootMargin: "-45% 0px -50% 0px" });
-      courses.forEach(function (c) { reader.observe(c); });
-    }
-    if (finePointer) courses.forEach(function (c) { c.addEventListener("mouseenter", function () { light(c); }); });
     /* warm the cache so plates never arrive late */
     window.addEventListener("load", function () {
       courses.forEach(function (c) { new Image().src = "images/" + c.getAttribute("data-img"); });
     });
+  }
+
+  /* Which course is being read? While the plate is pinned, a reading line travels from the top of
+     the pinned stage to its bottom as the list passes, and the course nearest the line is lit.
+     Every course, the first and last included, has its turn while the plate is fully on screen.
+     On phones (no pinned plate) the line is simply the middle of the screen. */
+  var courseList = $(".courses");
+  function readMenu(vh) {
+    if (!courses.length || !courseList) return;
+    var cr = courseList.getBoundingClientRect();
+    if (cr.bottom < -vh || cr.top > vh * 2) return;
+    var lineY = vh * 0.5;
+    if (stage && stage.offsetParent) {
+      var pinTop = parseFloat(getComputedStyle(stage).top) || 0;
+      var sh = stage.offsetHeight;
+      var p = clamp((pinTop - cr.top) / Math.max(1, cr.height - sh), 0, 1);
+      var h0 = courses[0].offsetHeight, hN = courses[courses.length - 1].offsetHeight;
+      lineY = pinTop + h0 / 2 + p * (sh - (h0 + hN) / 2);   /* centre of the first row at the start, of the last row at the end */
+      if (!reduce) stage.style.setProperty("--rot", ((p - 0.5) * 48).toFixed(2) + "deg");
+    }
+    var pick = courses[0], best = Infinity;
+    courses.forEach(function (c) {
+      var r = c.getBoundingClientRect();
+      var d = Math.abs(r.top + r.height / 2 - lineY);
+      if (d < best) { best = d; pick = c; }
+    });
+    light(pick);
   }
 
   /* ---- nav: mark the section being read ---- */
@@ -204,7 +210,6 @@
   /* ---- scroll-linked movement: one rAF per scroll frame, transforms only ---- */
   var heroFrame = $(".hero-frame");
   var heroCopy = $(".hero-copy");
-  var courseList = $(".courses");
   var drifters = reduce ? [] : $$("[data-parallax]").map(function (el) {
     return { el: el, ref: el.parentElement, speed: parseFloat(el.getAttribute("data-parallax")) || 0.08, near: !hasIO };
   });
@@ -223,6 +228,7 @@
     var y = window.scrollY;
     var vh = window.innerHeight;
     header(y);
+    readMenu(vh);
     if (reduce) return;
 
     if (hero && heroFrame) {
@@ -244,12 +250,6 @@
       if (slack > 0) shift = clamp(shift, -slack, slack);
       d.el.style.setProperty("--py", shift.toFixed(1) + "px");
     });
-
-    if (stage && courseList && stage.offsetParent) {
-      var cr = courseList.getBoundingClientRect();
-      var p = clamp((vh * 0.5 - cr.top) / cr.height, 0, 1);
-      stage.style.setProperty("--rot", ((p - 0.5) * 48).toFixed(2) + "deg");
-    }
   }
   function requestFrame() {
     if (ticking) return;
