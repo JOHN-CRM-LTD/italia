@@ -88,6 +88,27 @@ main, section[id] { scroll-margin-top: 5rem; }
 .menu-open .menu-toggle span { top: 21.5px; transform: rotate(45deg); }
 .menu-open .menu-toggle span + span { transform: rotate(-45deg); }
 
+/* music: a small disc that turns while the song plays */
+.sound {
+  display: grid; place-items: center; width: 44px; height: 44px; margin: 0 -.6rem;
+  padding: 0; border: 0; border-radius: 50%; background: none; color: var(--cera); cursor: pointer;
+}
+html:not(.js) .sound { display: none; }
+.sound svg {
+  width: 30px; height: 30px; overflow: visible;
+  opacity: .62; transition: opacity .5s var(--ease), filter .6s var(--ease);
+  animation: spin 3.2s linear infinite; animation-play-state: paused;
+}
+.sound:hover svg, .sound:focus-visible svg { opacity: .9; }
+.sound.is-playing svg { opacity: 1; animation-play-state: running; filter: drop-shadow(0 0 7px rgba(242, 194, 126, .55)); }
+.sound .disc { fill: rgba(22, 6, 10, .55); stroke: currentColor; stroke-width: 1.2; }
+.sound .sheen { fill: currentColor; opacity: .16; }
+.sound .groove { fill: none; stroke: currentColor; stroke-width: .6; opacity: .4; }
+.sound .label { fill: currentColor; }
+.sound .note { fill: none; stroke: var(--vino); stroke-width: 1.3; stroke-linejoin: round; }
+.sound .note-head { fill: var(--vino); }
+@keyframes spin { to { transform: rotate(360deg); } }
+
 /* mobile menu sheet */
 .sheet {
   position: fixed; inset: 0; z-index: 55; display: none; flex-direction: column;
@@ -378,14 +399,21 @@ main, section[id] { scroll-margin-top: 5rem; }
   -webkit-background-clip: text; background-clip: text;
 }
 
-/* ---------- pointer candlelight ---------- */
-.lume {
-  position: fixed; left: 0; top: 0; z-index: 50; width: 680px; height: 680px; margin: -340px 0 0 -340px;
-  border-radius: 50%; pointer-events: none; mix-blend-mode: screen; opacity: 0; transition: opacity 1s var(--ease);
-  background: radial-gradient(closest-side, rgba(255, 190, 110, .13), rgba(255, 190, 110, .05) 45%, transparent 72%);
-  will-change: transform;
+/* ---------- scrollbar: a thin line of candlelight, only there while you move ---------- */
+html.has-bar { scrollbar-width: none; }
+html.has-bar::-webkit-scrollbar { display: none; }
+.scrollbar { position: fixed; top: 0; right: 0; bottom: 0; z-index: 90; width: 14px; display: none; }
+html.has-bar .scrollbar { display: block; }
+.scrollbar-thumb {
+  position: absolute; top: 0; right: 3px; width: 4px; border-radius: 4px; touch-action: none;
+  background: linear-gradient(180deg, rgba(246, 206, 146, .85), rgba(214, 160, 92, .6));
+  box-shadow: 0 0 10px rgba(242, 194, 126, .35);
+  opacity: 0; transition: opacity .9s var(--ease), width .3s var(--ease), right .3s var(--ease);
 }
-.lume.is-on { opacity: 1; }
+.scrollbar.is-on .scrollbar-thumb { opacity: .8; transition-duration: .25s, .3s, .3s; }
+.scrollbar:hover .scrollbar-thumb, .scrollbar.is-drag .scrollbar-thumb { opacity: 1; width: 7px; right: 3px; transition-duration: .25s, .3s, .3s; }
+.scrollbar.is-drag .scrollbar-thumb { box-shadow: 0 0 16px rgba(242, 194, 126, .55); }
+@media (hover: none) { .scrollbar { pointer-events: none; } }
 
 /* ---------- motion: arrival states (only with scripting, only if motion is welcome) ---------- */
 @media (prefers-reduced-motion: no-preference) {
@@ -450,7 +478,7 @@ main, section[id] { scroll-margin-top: 5rem; }
 }
 @media (max-width: 900px) {
   .nav { display: none; }
-  .top .btn-line { margin-left: auto; }
+  .sound { margin-left: auto; }
   html.js .menu-toggle { display: block; }
   .top { gap: 1rem; }
   .sheet { display: flex; }
@@ -489,6 +517,5 @@ main, section[id] { scroll-margin-top: 5rem; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; transition-delay: 0s !important; }
-  .lume { display: none; }
   .top.is-hidden { transform: none; }
 }

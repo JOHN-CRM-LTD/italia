@@ -5,7 +5,6 @@
 
   var root = document.documentElement;
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
   var hasIO = "IntersectionObserver" in window;
 
   function $(sel, ctx) { return (ctx || document).querySelector(sel); }
@@ -222,6 +221,64 @@
     drifters.forEach(function (d) { nearby.observe(d.ref); });
   }
 
+  /* ---- scrollbar: a thin gold thumb that shows while the page moves, then fades ---- */
+  var track = $(".scrollbar");
+  var thumb = track && $(".scrollbar-thumb", track);
+  var placeBar = null, showBar = function () {};
+  if (track && thumb) {
+    root.classList.add("has-bar");
+    var thumbH = 0, maxY = 0, hideTimer, drag = null;
+    var range = function () { return Math.max(0, root.scrollHeight - window.innerHeight); };
+    placeBar = function () {
+      var r = range();
+      var y = r > 0 ? (window.scrollY / r) * maxY : 0;
+      thumb.style.transform = "translateY(" + clamp(y, 0, maxY).toFixed(1) + "px)";
+    };
+    var measureBar = function () {
+      var vh = window.innerHeight, dh = root.scrollHeight;
+      track.style.visibility = dh > vh + 1 ? "" : "hidden";
+      thumbH = Math.max(48, vh * vh / dh);
+      maxY = vh - thumbH;
+      thumb.style.height = thumbH.toFixed(1) + "px";
+      placeBar();
+    };
+    showBar = function () {
+      track.classList.add("is-on");
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(function () { if (!drag) track.classList.remove("is-on"); }, 900);
+    };
+    /* drag the thumb like a native scrollbar */
+    thumb.addEventListener("pointerdown", function (e) {
+      drag = { y: e.clientY, s: window.scrollY };
+      thumb.setPointerCapture(e.pointerId);
+      track.classList.add("is-drag");
+      root.style.scrollBehavior = "auto";
+      e.preventDefault();
+    });
+    thumb.addEventListener("pointermove", function (e) {
+      if (!drag) return;
+      window.scrollTo(0, drag.s + (e.clientY - drag.y) * range() / Math.max(1, maxY));
+    });
+    var endDrag = function () {
+      if (!drag) return;
+      drag = null;
+      track.classList.remove("is-drag");
+      root.style.scrollBehavior = "";
+      showBar();
+    };
+    thumb.addEventListener("pointerup", endDrag);
+    thumb.addEventListener("pointercancel", endDrag);
+    /* click the empty track to move a screen towards the click */
+    track.addEventListener("pointerdown", function (e) {
+      if (e.target !== track) return;
+      var above = e.clientY < thumb.getBoundingClientRect().top;
+      window.scrollBy({ top: (above ? -0.9 : 0.9) * window.innerHeight, behavior: reduce ? "auto" : "smooth" });
+    });
+    window.addEventListener("resize", measureBar);
+    if ("ResizeObserver" in window) new ResizeObserver(measureBar).observe(document.body);
+    measureBar();
+  }
+
   var ticking = false;
   function frame() {
     ticking = false;
@@ -229,6 +286,7 @@
     var vh = window.innerHeight;
     header(y);
     readMenu(vh);
+    if (placeBar) placeBar();
     if (reduce) return;
 
     if (hero && heroFrame) {
@@ -256,28 +314,53 @@
     ticking = true;
     requestAnimationFrame(frame);
   }
-  window.addEventListener("scroll", requestFrame, { passive: true });
+  window.addEventListener("scroll", function () { requestFrame(); showBar(); }, { passive: true });
   window.addEventListener("resize", requestFrame);
   frame();
 
-  /* ---- pointer candlelight: the one moving light ---- */
-  var lume = $(".lume");
-  if (lume && finePointer && !reduce) {
-    var tx = 0, ty = 0, lx = 0, ly = 0, chasing = false, seen = false;
-    var chase = function () {
-      lx += (tx - lx) * 0.11;
-      ly += (ty - ly) * 0.11;
-      lume.style.transform = "translate3d(" + lx.toFixed(1) + "px," + ly.toFixed(1) + "px,0)";
-      chasing = Math.abs(tx - lx) > 0.3 || Math.abs(ty - ly) > 0.3;
-      if (chasing) requestAnimationFrame(chase);
+  /* ---- music: off until asked for; the disc turns while it plays.
+     The song runs to 1:49, fades over the last moment, and starts again. ---- */
+  var audio = $("#theme");
+  var sound = $(".sound");
+  if (audio && sound) {
+    var LOOP_AT = 109, FADE_OUT = 1.6, FADE_IN = 0.6, VOLUME = 0.6;
+    var looping = false;
+    var setUi = function (on) {
+      sound.classList.toggle("is-playing", on);
+      sound.setAttribute("aria-pressed", String(on));
+      sound.setAttribute("aria-label", on ? "Pause music" : "Play music");
+      sound.title = on ? "Pause music" : "Play music";
     };
-    window.addEventListener("pointermove", function (e) {
-      if (e.pointerType && e.pointerType !== "mouse") return;
-      tx = e.clientX; ty = e.clientY;
-      if (!seen) { seen = true; lx = tx; ly = ty; }
-      lume.classList.add("is-on");
-      if (!chasing) { chasing = true; requestAnimationFrame(chase); }
-    }, { passive: true });
-    root.addEventListener("mouseleave", function () { lume.classList.remove("is-on"); });
+    var restart = function () { audio.currentTime = 0; };
+    var level = function () {
+      var t = audio.currentTime;
+      if (t >= LOOP_AT) { restart(); t = 0; }
+      var v = VOLUME;
+      if (t > LOOP_AT - FADE_OUT) v = VOLUME * (LOOP_AT - t) / FADE_OUT;
+      else if (t < FADE_IN) v = VOLUME * (0.15 + 0.85 * t / FADE_IN);
+      audio.volume = clamp(v, 0, 1);
+    };
+    var loop = function () {
+      if (audio.paused) { looping = false; return; }
+      level();
+      requestAnimationFrame(loop);
+    };
+    audio.volume = VOLUME * 0.15;
+    /* background tabs pause rAF, so keep the 1:49 loop on the media clock as well */
+    audio.addEventListener("timeupdate", level);
+    audio.addEventListener("ended", function () { restart(); audio.play(); });
+    audio.addEventListener("play", function () {
+      setUi(true);
+      if (!looping) { looping = true; requestAnimationFrame(loop); }
+    });
+    audio.addEventListener("pause", function () { setUi(false); });
+    sound.addEventListener("click", function () {
+      if (audio.paused) {
+        var p = audio.play();
+        if (p && p.catch) p.catch(function () { setUi(false); });
+      } else {
+        audio.pause();
+      }
+    });
   }
 })();

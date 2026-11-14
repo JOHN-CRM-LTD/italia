@@ -13,7 +13,14 @@ The page retains `noindex, follow` and has no booking form or booking backend.
   `prefers-reduced-motion: no-preference`, so the page is fully visible
   without JavaScript or with reduced motion).
 - `js/main.js`: header and mobile menu, hero intro, scroll reveals, parallax,
-  the menu plate crossfade and the pointer candlelight. No dependencies.
+  the menu plate crossfade, the fading gold scrollbar and the music toggle.
+  No dependencies.
+- `audio/theme.mp3`: background music, trimmed to 1:50 from the supplied
+  file. It never autoplays; the disc button in the header starts it, and
+  the script fades it out and loops it at 1:49. Seeking needs a server that
+  sends `Accept-Ranges: bytes` (GitHub Pages does; `python -m http.server`
+  does not, so the loop can only be fully tested on the published site or
+  with a range-capable local server).
 - `images/` and `fonts/`: design assets, served locally. The photographs
   (`tavola`, `mani`, `tagliolini`, `cantina`) are JPEGs resized from the
   supplied PNG originals; the plates are cut-out WebP files.
