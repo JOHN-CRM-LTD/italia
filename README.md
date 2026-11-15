@@ -49,13 +49,17 @@ Before publishing, check JavaScript syntax with `node --check js/main.js`,
 verify local assets and anchors, and preview desktop, tablet and mobile layouts.
 Check keyboard navigation, the mobile menu, reduced motion and the Visit us links.
 
-## Deferred JohnCRM integration
+## JohnCRM website chat
 
-The Italia Demo workspace and External Chat widget have not been configured
-as part of this website release because JohnCRM is unavailable. This site
-contains no chat loader, site key, simulated chat or CRM credentials.
+The website uses the official JohnCRM widget from
+`https://app.johncrm.com/widget/chat.js`, loaded asynchronously in `index.html`.
+Its public site key belongs to the **Italia Demo** workspace
+(`ORG-33YW6H3M`) in production JohnCRM. The visitor-facing chat title is Italia.
+External Chat (WebChat) is enabled; automatic AI replies remain **off**.
+Knowledge Base setup remains deferred.
 
-When CRM setup resumes, create or identify the correct Italia Demo workspace,
-enable External Chat, and use that workspace's real public embed snippet.
-Leave automatic AI replies off and the knowledge base empty unless the owner
-requests otherwise. Verify the integration before describing chat as available.
+Manage the widget under Italia Demo → Configurations → WebChat at
+https://app.johncrm.com/. Staff handle visitor conversations under WebChat.
+The embedded site key is public configuration, not a CRM login credential.
+If it is rotated in JohnCRM, replace the snippet in `index.html` and publish
+the update. Keep AI replies off unless the owner explicitly requests otherwise.
